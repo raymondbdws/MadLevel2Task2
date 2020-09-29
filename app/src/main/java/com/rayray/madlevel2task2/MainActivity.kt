@@ -17,8 +17,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     //alternative = 2d array
-    private val quizzes = arrayListOf<Quiz>()
-    private val quizAdapter = QuizAdapter(quizzes)
+    private val questions = arrayListOf<Question>()
+    private val questionAdapter = QuestionAdapter(questions)
 
     private lateinit var binding: ActivityMainBinding
 
@@ -35,18 +35,15 @@ class MainActivity : AppCompatActivity() {
      * 4 is left(incorrect), 8 is right(correct).
      */
     private fun initViews() {
-        val questions = arrayOf(
-            arrayOf("A 'val' and 'var' are the same.", "8"),
-            arrayOf("MAD grants 12 ECTS", "4"),
-            arrayOf("A Unit in Kotlin corresponds to a void in Java.", "8"),
-            arrayOf("In Kotlin 'when' replaces the 'switch' operator in Java.", "8")
-        )
+        this.questions.add(Question("A 'val' and 'var' are the same.", ItemTouchHelper.RIGHT))
+        this.questions.add(Question("MAD grants 12 ECTS", ItemTouchHelper.LEFT))
+        this.questions.add(Question("A Unit in Kotlin corresponds to a void in Java.", ItemTouchHelper.RIGHT))
+        this.questions.add(Question("In Kotlin 'when' replaces the 'switch' operator in Java.", ItemTouchHelper.RIGHT))
 
-        addQuiz(questions)
         binding.rvQuiz.layoutManager = LinearLayoutManager(
             this@MainActivity, RecyclerView.VERTICAL, false
         )
-        binding.rvQuiz.adapter = quizAdapter
+        binding.rvQuiz.adapter = questionAdapter
         binding.rvQuiz.addItemDecoration(
             DividerItemDecoration(
                 this@MainActivity,
@@ -55,19 +52,6 @@ class MainActivity : AppCompatActivity() {
         )
 
         createItemTouchHelper().attachToRecyclerView(rvQuiz)
-    }
-
-    //notifydatasetchanged is important. Needs to be notified, when the data has been changed. It
-    //will refresh itself
-    /**
-     * Add quiz
-     * 4 = left | incorrect, 8 = right | correct
-     */
-    private fun addQuiz(questions: Array<Array<String>>) {
-
-        for ((index, value) in questions.withIndex()){
-            quizzes.add(Quiz(value[0], value[1]))
-        }
     }
 
     //4 = left | incorrect, 8 = right | correct
@@ -87,8 +71,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val POSITION = viewHolder.adapterPosition
-                checkAnswer(POSITION, direction, quizzes[POSITION].correctAnswer)
+                val position = viewHolder.adapterPosition
+                checkAnswer(position, direction)
             }
         }
         return ItemTouchHelper(callback)
@@ -99,19 +83,21 @@ class MainActivity : AppCompatActivity() {
      */
     private fun deleteItem(p : Int){
         val POSITION = p
-        quizzes.removeAt(POSITION)
-        quizAdapter.notifyDataSetChanged()
+        questions.removeAt(POSITION)
+        questionAdapter.notifyDataSetChanged()
     }
 
     /**
      * checks answer. If answer is correct, the selected item will be deleted. If not, then
      * a toast message will show.
      */
-    private fun checkAnswer(position: Int, swipeDirection: Int, correctAnswer: String) {
-        if (swipeDirection.toString().equals(correctAnswer)){
+    private fun checkAnswer(position: Int, swipeDirection: Int) {
+        //todo dit gebruiken
+        if (swipeDirection == questions.get(position).correctAnswer){
+
             deleteItem(position)
         }else{
-            quizAdapter.notifyDataSetChanged()
+            questionAdapter.notifyDataSetChanged()
             Toast.makeText(applicationContext, "Wrong answer, try again", Toast.LENGTH_LONG)
                 .show()
         }

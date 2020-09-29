@@ -11,18 +11,18 @@ import com.rayray.madlevel2task2.databinding.ItemQuizBinding
  *
  * Quiz adapter.
  */
-class QuizAdapter(private val quiz: List<Quiz>) : RecyclerView.Adapter<QuizAdapter.ViewHolder>() {
+class QuestionAdapter(private val questions: List<Question>) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val BINDING = ItemQuizBinding.bind(itemView)
 
-        fun databind(quiz: Quiz) {
-            BINDING.tvQuiz.text = quiz.quizText
+        fun databind(question: Question) {
+            BINDING.tvQuiz.text = question.quizText
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuizAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestionAdapter.ViewHolder {
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.item_quiz, parent,
@@ -32,10 +32,10 @@ class QuizAdapter(private val quiz: List<Quiz>) : RecyclerView.Adapter<QuizAdapt
     }
 
     override fun getItemCount(): Int {
-        return quiz.size
+        return questions.size
     }
 
-    override fun onBindViewHolder(holder: QuizAdapter.ViewHolder, position: Int) {
-        holder.databind(quiz[position])
+    override fun onBindViewHolder(holder: QuestionAdapter.ViewHolder, position: Int) {
+        holder.databind(questions[position])
     }
 }

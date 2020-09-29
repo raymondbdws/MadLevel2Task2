@@ -1,6 +1,6 @@
 package com.rayray.madlevel2task2
 
-data class Quiz(
+data class Question(
     var quizText: String,
-    var correctAnswer: String
+    var correctAnswer: Int
 )
